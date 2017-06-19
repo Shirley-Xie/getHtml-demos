@@ -4,19 +4,20 @@ import re
 
 def getHTMLText(url):
     try:
-        r = requests.get(url, timeout=30)
+        r = requests.get(url, timeout=3)
         r.raise_for_status()
         r.encoding = r.apparent_encoding
         return r.text
-    except:
+    except Exception as er:
+        print(er.args)
         return ""
     
 def parsePage(ilt, html):
     try:
         plt = re.findall(r'\"view_price\"\:\"[\d\.]*\"',html)
-        tlt = re.findall(r'\"raw_title\"\:\".*?\"',html)
+        tlt = re.findall(r'\"raw_title\"\:\".*?\"',html)      # *?\最小匹配
         for i in range(len(plt)):
-            price = eval(plt[i].split(':')[1])
+            price = eval(plt[i].split(':')[1])        #eval去除单引号或双引号
             title = eval(tlt[i].split(':')[1])
             ilt.append([price , title])
     except:
